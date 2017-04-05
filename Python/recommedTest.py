@@ -1,4 +1,5 @@
-from movieRecommend import *
+from recommendSystem import *
+
 def loadExData():
     return[[0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 5],
            [0, 0, 0, 3, 0, 4, 0, 0, 0, 0, 3],
@@ -12,5 +13,8 @@ def loadExData():
            [0, 0, 0, 0, 5, 0, 0, 0, 0, 4, 0],
            [1, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0]]
 
-recommed = Recommend(loadExData(), "ecludSim")
-print recommed.recommend(1,10)
+recommend = recommendSystem(load=False)
+recommend.recommend(10)
+# print recommed.recommend(1,10)
+
+

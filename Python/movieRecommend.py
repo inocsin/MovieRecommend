@@ -1,12 +1,41 @@
 import numpy as np
-class Recommend(object):
-    def __init__(self, data, dist="pearsSim"):
+import pickle
+import os
+
+class movieRecommend(object):
+    """
+    In data, each row represent a customer rating, each column represent an item, e.g. movies
+    """
+    def __init__(self, data, dist="pearsSim", load=True):
         self.data = np.mat(data);
         self.sim = getattr(self, dist)
         self.similarDict = {}
         self.singularNum = 0 # the Nth singular value that consist of the 90% of total singular value
         # update the similarDict
-        self.svdSimMat(self.sim)
+        if load == True:
+            self.loadFromDumpFile()
+        else:
+            self.svdSimMat(self.sim)
+
+
+    def loadFromDumpFile(self):
+        if os.path.exists('./data/dumpfile/similarDict.pkl'):
+            pkl_file = open('./data/dumpfile/similarDict.pkl','rb')
+            self.similarDict = pickle.load(pkl_file)
+            pkl_file.close()
+            print "Load similarDict.pkl successfully"
+        else:
+            print "Cannot find file similarDict.pkl"
+            os._exit()
+
+    def saveToDumpFile(self):
+        if os.path.exists('./data/dumpfile/similarDict.pkl'):
+            os.remove('./data/dumpfile/similarDict.pkl')
+        output = open('./data/dumpfile/similarDict.pkl','wb')
+        pickle.dump(self.similarDict, output)
+        output.close()
+        print "Save file to similarDict.pkl successfully"
+
 
     def update(self, simFunc):
         self.svdSimMat(simFunc)
@@ -51,6 +80,9 @@ class Recommend(object):
             for j in range(i + 1, m):
                 similarity = simFunc(xformedItems[i,:].T, xformedItems[j,:].T)
                 self.similarDict[(i,j)] = similarity
+
+        # save dict to dumpfile
+        self.saveToDumpFile()
 
     def estScore(self, user, item):
         m = np.shape(self.data)[1]
