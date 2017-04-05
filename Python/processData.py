@@ -18,8 +18,8 @@ class processData(object):
         self.probe = probe
         self.qualifying = qualifying
         # parameter
-        self.customer = 2649429
-        self.movieNum = 100
+        self.customer = 100000 # 2649429
+        self.movieNum = 100 # 17770
         self.movieLimit = 'mv_0000100.txt'
         # data file
         self.probeDict = {}
@@ -118,7 +118,8 @@ class processData(object):
                     key = int(line[:-1])
                 else:
                     customer, rate, date = line.split(',')
-                    self.ratingData[int(customer)-1][key-1] = int(rate)
+                    if int(customer) <= self.customer:
+                        self.ratingData[int(customer)-1][key-1] = int(rate)
             fd.close()
         if os.path.exists('./data/dumpfile/ratingData.npy'):
             os.remove('./data/dumpfile/ratingData.npy')
