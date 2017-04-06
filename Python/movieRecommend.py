@@ -95,6 +95,8 @@ class movieRecommend(object):
         n, m = np.shape(self.data) # n is number of user, m is number of items
         SinNum = min(100,min(self.data.shape)-1)
         U, S, VT = svds(sparse.csr_matrix(self.data.astype('float')), k=SinNum, maxiter=200)
+        print "Sigma"
+        print S
         Sig = np.mat(np.eye(SinNum) * S)
         # xformedItems = self.data.T.dot(U).dot(Sig.I)
         xformedItems = sparse.csr_matrix(self.data).T.dot(sparse.csr_matrix(U)).dot(Sig.I)

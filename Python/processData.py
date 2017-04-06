@@ -120,6 +120,7 @@ class processData(object):
                     customer, rate, date = line.split(',')
                     if int(customer) <= self.customer:
                         self.ratingData[int(customer)-1][key-1] = int(rate)
+                        print "customer: " + str(customer-1) + " movie: " + str(key-1) + " rating: " + str(rate)
             fd.close()
         if os.path.exists('./data/dumpfile/ratingData.npy'):
             os.remove('./data/dumpfile/ratingData.npy')
