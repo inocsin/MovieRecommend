@@ -10,6 +10,7 @@ class recommendSystem(object):
 
         else:
             self.process_data.loadFromTxtFile()
+            print self.process_data.ratingData[:][0]
             self.recommed = movieRecommend(self.process_data.ratingData, dist="pearsSim", load=svdLoad)
 
     def recommend(self, user, N=10):

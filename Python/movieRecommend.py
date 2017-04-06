@@ -11,6 +11,8 @@ class movieRecommend(object):
     def __init__(self, data, dist="pearsSim", load=False, sparse=True):
         # self.data = np.array(data)
         self.data = np.array(data)
+        print self.data[:][0]
+        print np.shape(self.data)
         self.sim = getattr(self, dist)
         self.similarDict = {}
         self.singularNum = 0 # the Nth singular value that consist of the 90% of total singular value
