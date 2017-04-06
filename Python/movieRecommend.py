@@ -9,6 +9,7 @@ class movieRecommend(object):
     In data, each row represent a customer rating, each column represent an item, e.g. movies
     """
     def __init__(self, data, dist="pearsSim", load=False, sparse=True):
+        # self.data = np.array(data)
         self.data = np.array(data)
         self.sim = getattr(self, dist)
         self.similarDict = {}
@@ -94,7 +95,7 @@ class movieRecommend(object):
     def sparseSvds(self, simFunc = pearsSim):
         n, m = np.shape(self.data) # n is number of user, m is number of items
         SinNum = min(100,min(self.data.shape)-1)
-        U, S, VT = svds(sparse.csr_matrix(self.data.astype('float')), k=SinNum, maxiter=200)
+        U, S, VT = svds(sparse.csr_matrix(self.data.astype('float')), k=SinNum)
         print "Sigma"
         print S
         Sig = np.mat(np.eye(SinNum) * S)
