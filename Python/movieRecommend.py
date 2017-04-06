@@ -1,21 +1,24 @@
 import numpy as np
 import pickle
 import os
+from scipy.sparse.linalg import svds
+from scipy import sparse
 
 class movieRecommend(object):
     """
     In data, each row represent a customer rating, each column represent an item, e.g. movies
     """
-    def __init__(self, data, dist="pearsSim", load=True):
-        self.data = np.mat(data);
+    def __init__(self, data, dist="pearsSim", load=False, sparse=True):
+        self.data = np.array(data)
         self.sim = getattr(self, dist)
         self.similarDict = {}
         self.singularNum = 0 # the Nth singular value that consist of the 90% of total singular value
         # update the similarDict
+        self.sparse = sparse
         if load == True:
             self.loadFromDumpFile()
         else:
-            self.svdSimMat(self.sim)
+            self.svd(self.sim)
 
 
     def loadFromDumpFile(self):
@@ -37,8 +40,11 @@ class movieRecommend(object):
         print "Save file to similarDict.pkl successfully"
 
 
-    def update(self, simFunc):
-        self.svdSimMat(simFunc)
+    def svd(self, simFunc):
+        if self.sparse == True:
+            self.sparseSvds(simFunc)
+        else:
+            self.svdSimMat(simFunc)
 
     def ecludSim(self, A, B):
         "A and B is n * 1 vector"
@@ -64,6 +70,7 @@ class movieRecommend(object):
         """
         n, m = np.shape(self.data) # n is number of user, m is number of items
         U, Sigma, VT = np.linalg.svd(self.data)
+        # print Sigma
         total = sum(Sigma ** 2) * 0.9 # to get the 90% information
         count = 0
         cur_sum = 0
@@ -74,7 +81,7 @@ class movieRecommend(object):
                 break
         self.singularNum = count
         Sig = np.mat(np.eye(self.singularNum) * Sigma[:self.singularNum])
-        xformedItems = self.data.T * U[:,:self.singularNum] * Sig.I
+        xformedItems = self.data.T.dot(U[:,:self.singularNum]).dot(Sig.I)
 
         for i in range(m - 1):
             for j in range(i + 1, m):
@@ -83,6 +90,23 @@ class movieRecommend(object):
 
         # save dict to dumpfile
         self.saveToDumpFile()
+
+    def sparseSvds(self, simFunc = pearsSim):
+        n, m = np.shape(self.data) # n is number of user, m is number of items
+        SinNum = min(100,min(self.data.shape)-1)
+        U, S, VT = svds(sparse.csr_matrix(self.data.astype('float')), k=SinNum, maxiter=200)
+        Sig = np.mat(np.eye(SinNum) * S)
+        xformedItems = self.data.T.dot(U).dot(Sig.I)
+        # print S
+
+        for i in range(m - 1):
+            for j in range(i + 1, m):
+                similarity = simFunc(xformedItems[i,:].T, xformedItems[j,:].T)
+                self.similarDict[(i,j)] = similarity
+
+        # save dict to dumpfile
+        self.saveToDumpFile()
+
 
     def estScore(self, user, item):
         m = np.shape(self.data)[1]
@@ -107,7 +131,7 @@ class movieRecommend(object):
 
     def recommend(self, user, N = 10):
         # np.nonzero returns tuple(rowindex, colindex)
-        unratedItems = np.nonzero(self.data[user, :].A == 0)[1]
+        unratedItems = np.nonzero(self.data[user, :] == 0)[0]
         if len(unratedItems) == 0:
             print "You have rated everthing"
             return 0

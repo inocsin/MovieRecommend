@@ -18,7 +18,7 @@ class processData(object):
         self.probe = probe
         self.qualifying = qualifying
         # parameter
-        self.customer = 100000 # 2649429
+        self.customer = 2649429
         self.movieNum = 100 # 17770
         self.movieLimit = 'mv_0000100.txt'
         # data file
@@ -181,16 +181,3 @@ class processData(object):
         # print self.qualifyDict[1]
         # print self.movieDict[1]
         # print self.ratingData[0][0]
-
-
-
-
-
-
-
-
-
-
-
-
-
