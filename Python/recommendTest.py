@@ -13,7 +13,7 @@ def loadExData():
            [0, 0, 0, 0, 5, 0, 0, 0, 0, 4, 0],
            [1, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0]]
 
-recommend = recommendSystem(dataLoad=False, svdLoad=False)
+recommend = recommendSystem(dataLoad=True, svdLoad=False)
 print recommend.recommend(1,10)
 
 # rec = movieRecommend(loadExData(),load=False,sparse=True)
