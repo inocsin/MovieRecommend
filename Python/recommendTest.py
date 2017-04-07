@@ -15,10 +15,11 @@ def loadExData():
            [1, 0, 0, 0, 0, 0, 0, 1, 2, 0, 0]]
 
 recommend = recommendSystem(dataLoad=False, svdLoad=False)
-print recommend.recommend(1,10)
+print recommend.recommend(2442,10)
+
+
 # process_data = processData("./data/training_set/", "./data/movie_titles.txt", "./data/probe.txt", "./data/qualifying.txt")
 # process_data.loadRating()
 # rec = movieRecommend(loadExData(),load=False,sparse=True)
 # print rec.recommend(1,10)
-
 

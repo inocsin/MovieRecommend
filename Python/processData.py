@@ -19,8 +19,8 @@ class processData(object):
         self.qualifying = qualifying
         # parameter
         self.customer = 2649429
-        self.movieNum = 100 # 17770
-        self.movieLimit = 'mv_0000100.txt'
+        self.movieNum = 17770
+        self.movieLimit = 'mv_0017770.txt' #'mv_0000100.txt'
         # data file
         self.probeDict = {}
         self.qualifyDict = {}
@@ -120,11 +120,11 @@ class processData(object):
                     customer, rate, date = line.split(',')
                     if int(customer) <= self.customer:
                         self.ratingData[int(customer)-1][key-1] = int(rate)
-                        print "customer: " + str(int(customer)-1) + " movie: " + str(key-1) + " rating: " + str(self.ratingData[int(customer)-1][key-1])
+                        # if key == 1:
+                        #     print "customer: " + str(int(customer)-1) + " movie: " + str(key-1) + " rating: " + str(self.ratingData[int(customer)-1][key-1])
             fd.close()
-        print "From loadRating()" 
-        print np.shape(self.ratingData)
-        print np.nonzero(self.ratingData[:][0])
+        # print "From processData::loadRating()"
+        # print np.nonzero(self.ratingData[:,0])
         if os.path.exists('./data/dumpfile/ratingData.npy'):
             os.remove('./data/dumpfile/ratingData.npy')
         np.save('./data/dumpfile/ratingData.npy',self.ratingData)
