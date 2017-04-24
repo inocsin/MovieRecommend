@@ -19,8 +19,8 @@ class processData(object):
         self.qualifying = qualifying
         # parameter
         self.customer = 2649429
-        self.movieNum = 17770
-        self.movieLimit = 'mv_0017770.txt' #'mv_0000100.txt'
+        self.movieNum = 100
+        self.movieLimit = 'mv_0000100.txt'
         # data file
         self.probeDict = {}
         self.qualifyDict = {}
@@ -119,7 +119,9 @@ class processData(object):
                 else:
                     customer, rate, date = line.split(',')
                     if int(customer) <= self.customer:
-                        self.ratingData[int(customer)-1][key-1] = int(rate)
+                        self.ratingData[int(customer)-1,key-1] = float(rate)
+                    # if True:
+                    #     self.ratingData[(int(customer)-1)%self.customer][key-1] = int(rate)
                         # if key == 1:
                         #     print "customer: " + str(int(customer)-1) + " movie: " + str(key-1) + " rating: " + str(self.ratingData[int(customer)-1][key-1])
             fd.close()
